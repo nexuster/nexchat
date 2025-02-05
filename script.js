@@ -16,8 +16,11 @@ let username = '';
 
 function login() {
     const usernameInput = document.getElementById('usernameInput').value;
+    // Debug statement to check if the login function is called
+    alert('Login function called');
     if (usernameInput.trim() !== '') {
         username = usernameInput;
+        alert('Username set: ' + username); // Debug statement to check if the username is set
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('chatContainer').style.display = 'flex';
         loadMessages();
@@ -33,6 +36,10 @@ function sendMessage() {
             username: username,
             text: messageInput,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            alert('Message sent'); // Debug statement to check if the message is sent
+        }).catch((error) => {
+            alert('Error sending message: ' + error); // Debug statement to catch errors
         });
         document.getElementById('messageInput').value = '';
     } else {
@@ -53,5 +60,7 @@ function loadMessages() {
                 chatWindow.appendChild(messageElement);
             });
             chatWindow.scrollTop = chatWindow.scrollHeight;
+        }, (error) => {
+            alert('Error loading messages: ' + error); // Debug statement to catch errors
         });
 }
