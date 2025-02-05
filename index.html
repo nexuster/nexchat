@@ -10,20 +10,20 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="login-container">
-        <h2>Login</h2>
-        <input type="email" id="login-email" placeholder="Email">
-        <input type="password" id="login-password" placeholder="Password">
-        <button onclick="login()">Login</button>
-        <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
-    </div>
-
-    <div id="register-container" style="display:none;">
+    <div id="register-container">
         <h2>Register</h2>
         <input type="email" id="register-email" placeholder="Email">
         <input type="password" id="register-password" placeholder="Password">
         <button onclick="register()">Register</button>
         <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+
+    <div id="login-container" style="display:none;">
+        <h2>Login</h2>
+        <input type="email" id="login-email" placeholder="Email">
+        <input type="password" id="login-password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
     </div>
 
     <div id="chat-container" style="display:none;">
