@@ -1,10 +1,16 @@
-// Pusher configuration
-const pusher = new Pusher('5d814bdfd49de4d3e387', {
-    cluster: 'us2',
-    encrypted: true
-});
+// Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyD7mtvP8N6Wx54mQWfp-G_T_3OQKhRyH9M",
+    authDomain: "nexchat-nex.firebaseapp.com",
+    projectId: "nexchat-nex",
+    storageBucket: "nexchat-nex.firebasestorage.app",
+    messagingSenderId: "772371540643",
+    appId: "1:772371540643:web:61a613cc1624f42b6ced16"
+};
 
-const channel = pusher.subscribe('chat');
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 let username = '';
 
@@ -14,6 +20,7 @@ function login() {
         username = usernameInput;
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('chatContainer').style.display = 'flex';
+        loadMessages();
     } else {
         alert('Please enter a valid username');
     }
@@ -22,12 +29,10 @@ function login() {
 function sendMessage() {
     const messageInput = document.getElementById('messageInput').value;
     if (messageInput.trim() !== '') {
-        fetch('https://nexuster,github.io/nexchat/send-message', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, message: messageInput })
+        db.collection('messages').add({
+            username: username,
+            text: messageInput,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
         document.getElementById('messageInput').value = '';
     } else {
@@ -35,11 +40,18 @@ function sendMessage() {
     }
 }
 
-channel.bind('message', (data) => {
-    const chatWindow = document.getElementById('chatWindow');
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message');
-    messageElement.innerHTML = `<span class="username">${data.username}:</span> <span class="text">${data.message}</span>`;
-    chatWindow.appendChild(messageElement);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-});
+function loadMessages() {
+    db.collection('messages').orderBy('timestamp')
+        .onSnapshot((snapshot) => {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.innerHTML = '';
+            snapshot.forEach((doc) => {
+                const message = doc.data();
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                messageElement.innerHTML = `<span class="username">${message.username}:</span> <span class="text">${message.text}</span>`;
+                chatWindow.appendChild(messageElement);
+            });
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        });
+}
