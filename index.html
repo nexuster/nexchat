@@ -3,28 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat System</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Add Firebase SDK -->
+    <title>Firebase Chat</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="chatContainer">
-        <div>
-            <label for="displayOptions">Display Options:</label>
-            <select id="displayOptions" onchange="loadMessages()">
-                <option value="default">Default</option>
-                <option value="timestamp">With Timestamp</option>
-                <option value="username">Only Username</option>
-            </select>
-        </div>
-        <div id="chatWindow"></div>
-        <input type="text" id="usernameInput" placeholder="Enter your username">
-        <input type="text" id="messageInput" placeholder="Type a message">
-        <button onclick="sendMessage()">Send</button>
+    <div id="login-container">
+        <h2>Login</h2>
+        <input type="email" id="login-email" placeholder="Email">
+        <input type="password" id="login-password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
     </div>
 
-    <script src="script.js"></script>
+    <div id="register-container" style="display:none;">
+        <h2>Register</h2>
+        <input type="email" id="register-email" placeholder="Email">
+        <input type="password" id="register-password" placeholder="Password">
+        <button onclick="register()">Register</button>
+        <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+
+    <div id="chat-container" style="display:none;">
+        <h2>Chat</h2>
+        <div id="messages"></div>
+        <input type="text" id="message-input" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script src="app.js"></script>
 </body>
 </html>

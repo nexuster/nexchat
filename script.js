@@ -10,61 +10,107 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 
+// Firebase services
+const auth = firebase.auth();
+const database = firebase.database();
+
+// DOM Elements
+const loginContainer = document.getElementById('login-container');
+const registerContainer = document.getElementById('register-container');
+const chatContainer = document.getElementById('chat-container');
+const messagesDiv = document.getElementById('messages');
+const messageInput = document.getElementById('message-input');
+
+// Show register form
+function showRegister() {
+    loginContainer.style.display = 'none';
+    registerContainer.style.display = 'block';
+}
+
+// Show login form
+function showLogin() {
+    registerContainer.style.display = 'none';
+    loginContainer.style.display = 'block';
+}
+
+// Show chat
+function showChat() {
+    loginContainer.style.display = 'none';
+    registerContainer.style.display = 'none';
+    chatContainer.style.display = 'block';
+}
+
+// Register new user
+function register() {
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+            alert('User registered successfully');
+            showLogin();
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+}
+
+// Login user
+function login() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            showChat();
+            loadMessages();
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+}
+
+// Logout user
+function logout() {
+    auth.signOut()
+        .then(() => {
+            chatContainer.style.display = 'none';
+            loginContainer.style.display = 'block';
+        });
+}
+
+// Send message
 function sendMessage() {
-    const usernameInput = document.getElementById('usernameInput').value;
-    const messageInput = document.getElementById('messageInput').value;
-
-    if (usernameInput.trim() === '') {
-        alert('Please enter a valid username');
-        return;
-    }
-
-    if (messageInput.trim() !== '') {
-        db.collection('messages').add({
-            username: usernameInput,
-            text: messageInput,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        }).then(() => {
-            console.log('Message sent');
-        }).catch((error) => {
-            console.error('Error sending message: ', error);
+    const message = messageInput.value;
+    const user = auth.currentUser;
+    if (message && user) {
+        database.ref('messages').push({
+            text: message,
+            uid: user.uid,
+            email: user.email
         });
-        document.getElementById('messageInput').value = '';
-    } else {
-        alert('Please enter a message');
+        messageInput.value = '';
     }
 }
 
+// Load messages
 function loadMessages() {
-    const displayOption = document.getElementById('displayOptions').value;
-    db.collection('messages').orderBy('timestamp')
-        .onSnapshot((snapshot) => {
-            const chatWindow = document.getElementById('chatWindow');
-            chatWindow.innerHTML = '';
-            snapshot.forEach((doc) => {
-                const message = doc.data();
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('message');
-                
-                // Customize message display based on the selected option
-                if (displayOption === 'default') {
-                    messageElement.innerHTML = `<span class="username">${message.username}:</span> <span class="text">${message.text}</span>`;
-                } else if (displayOption === 'timestamp') {
-                    const timestamp = message.timestamp ? message.timestamp.toDate().toLocaleString() : '';
-                    messageElement.innerHTML = `<span class="username">${message.username}:</span> <span class="text">${message.text}</span> <span class="timestamp">(${timestamp})</span>`;
-                } else if (displayOption === 'username') {
-                    messageElement.innerHTML = `<span class="username">${message.username}</span>`;
-                }
-                
-                chatWindow.appendChild(messageElement);
-            });
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        }, (error) => {
-            console.error('Error loading messages: ', error);
+    database.ref('messages').on('value', (snapshot) => {
+        messagesDiv.innerHTML = '';
+        snapshot.forEach((childSnapshot) => {
+            const message = childSnapshot.val();
+            const messageElement = document.createElement('div');
+            messageElement.textContent = `${message.email}: ${message.text}`;
+            messagesDiv.appendChild(messageElement);
         });
+    });
 }
 
-// Load messages initially when the page loads
-document.addEventListener('DOMContentLoaded', loadMessages);
+// Auth state listener
+auth.onAuthStateChanged(user => {
+    if (user) {
+        showChat();
+        loadMessages();
+    } else {
+        loginContainer.style.display = 'block';
+    }
+});
