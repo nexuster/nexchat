@@ -9,7 +9,7 @@ body {
 }
 
 #loginContainer, #chatContainer {
-    width: 300px;
+    width: 400px;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: white;
@@ -17,12 +17,33 @@ body {
     text-align: center;
 }
 
+#chatContainer {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+}
+
 #chatWindow {
-    height: 200px;
+    flex: 1;
     overflow-y: scroll;
     border: 1px solid #ccc;
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 8px;
     background-color: #f9f9f9;
+}
+
+.message {
+    margin: 5px 0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #e0e0e0;
+}
+
+.message .username {
+    font-weight: bold;
+}
+
+.message .text {
+    margin-left: 5px;
 }
