@@ -16,11 +16,8 @@ let username = '';
 
 function login() {
     const usernameInput = document.getElementById('usernameInput').value;
-    // Debug statement to check if the login function is called
-    alert('Login function called');
     if (usernameInput.trim() !== '') {
         username = usernameInput;
-        alert('Username set: ' + username); // Debug statement to check if the username is set
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('chatContainer').style.display = 'flex';
         loadMessages();
@@ -37,9 +34,9 @@ function sendMessage() {
             text: messageInput,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
-            alert('Message sent'); // Debug statement to check if the message is sent
+            console.log('Message sent');
         }).catch((error) => {
-            alert('Error sending message: ' + error); // Debug statement to catch errors
+            console.error('Error sending message: ', error);
         });
         document.getElementById('messageInput').value = '';
     } else {
@@ -48,6 +45,7 @@ function sendMessage() {
 }
 
 function loadMessages() {
+    const displayOption = document.getElementById('displayOptions').value;
     db.collection('messages').orderBy('timestamp')
         .onSnapshot((snapshot) => {
             const chatWindow = document.getElementById('chatWindow');
@@ -56,11 +54,21 @@ function loadMessages() {
                 const message = doc.data();
                 const messageElement = document.createElement('div');
                 messageElement.classList.add('message');
-                messageElement.innerHTML = `<span class="username">${message.username}:</span> <span class="text">${message.text}</span>`;
+                
+                // Customize message display based on the selected option
+                if (displayOption === 'default') {
+                    messageElement.innerHTML = `<span class="username">${message.username}:</span> <span class="text">${message.text}</span>`;
+                } else if (displayOption === 'timestamp') {
+                    const timestamp = message.timestamp ? message.timestamp.toDate().toLocaleString() : '';
+                    messageElement.innerHTML = `<span class="username">${message.username}:</span> <span class="text">${message.text}</span> <span class="timestamp">(${timestamp})</span>`;
+                } else if (displayOption === 'username') {
+                    messageElement.innerHTML = `<span class="username">${message.username}</span>`;
+                }
+                
                 chatWindow.appendChild(messageElement);
             });
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }, (error) => {
-            alert('Error loading messages: ' + error); // Debug statement to catch errors
+            console.error('Error loading messages: ', error);
         });
 }

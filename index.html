@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat System</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Add Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
@@ -16,6 +17,14 @@
     </div>
 
     <div id="chatContainer" style="display: none;">
+        <div>
+            <label for="displayOptions">Display Options:</label>
+            <select id="displayOptions" onchange="loadMessages()">
+                <option value="default">Default</option>
+                <option value="timestamp">With Timestamp</option>
+                <option value="username">Only Username</option>
+            </select>
+        </div>
         <div id="chatWindow"></div>
         <input type="text" id="messageInput" placeholder="Type a message">
         <button onclick="sendMessage()">Send</button>
