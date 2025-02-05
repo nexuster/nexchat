@@ -1,21 +1,24 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>nexchat - Fun with your peers</title>
-  </head>
-  <body>
-    <h1>its like a text message app</h1>
-    <h3>but better</h3>
-    <div class="signup">
-      <form action="/signup" method="POST">
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" required><br>
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required><br>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required><br>
-        <input type="submit" value="Sign Up">
-      </form>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="loginContainer">
+        <h2>Login to Chat</h2>
+        <input type="text" id="usernameInput" placeholder="Enter your username">
+        <button onclick="login()">Login</button>
     </div>
-  </body>
+
+    <div id="chatContainer" style="display: none;">
+        <div id="chatWindow"></div>
+        <input type="text" id="messageInput" placeholder="Type a message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
