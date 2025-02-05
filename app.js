@@ -12,7 +12,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 // Firebase services
-const auth = firebase.auth();
+const auth = firebase.auth(); 
 const database = firebase.database();
 
 // DOM Elements
