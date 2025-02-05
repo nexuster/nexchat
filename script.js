@@ -12,25 +12,18 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-let username = '';
-
-function login() {
-    const usernameInput = document.getElementById('usernameInput').value;
-    if (usernameInput.trim() !== '') {
-        username = usernameInput;
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('chatContainer').style.display = 'flex';
-        loadMessages();
-    } else {
-        alert('Please enter a valid username');
-    }
-}
-
 function sendMessage() {
+    const usernameInput = document.getElementById('usernameInput').value;
     const messageInput = document.getElementById('messageInput').value;
+
+    if (usernameInput.trim() === '') {
+        alert('Please enter a valid username');
+        return;
+    }
+
     if (messageInput.trim() !== '') {
         db.collection('messages').add({
-            username: username,
+            username: usernameInput,
             text: messageInput,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         }).then(() => {
@@ -72,3 +65,6 @@ function loadMessages() {
             console.error('Error loading messages: ', error);
         });
 }
+
+// Load messages initially when the page loads
+document.addEventListener('DOMContentLoaded', loadMessages);

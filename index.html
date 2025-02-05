@@ -10,13 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
-    <div id="loginContainer">
-        <h2>Login to Chat</h2>
-        <input type="text" id="usernameInput" placeholder="Enter your username">
-        <button onclick="login()">Login</button>
-    </div>
-
-    <div id="chatContainer" style="display: none;">
+    <div id="chatContainer">
         <div>
             <label for="displayOptions">Display Options:</label>
             <select id="displayOptions" onchange="loadMessages()">
@@ -26,6 +20,7 @@
             </select>
         </div>
         <div id="chatWindow"></div>
+        <input type="text" id="usernameInput" placeholder="Enter your username">
         <input type="text" id="messageInput" placeholder="Type a message">
         <button onclick="sendMessage()">Send</button>
     </div>
